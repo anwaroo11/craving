@@ -27,7 +27,7 @@ button,input,select{font:inherit}button{border:0;cursor:pointer;border-radius:14
     <p class="hint">نظام المبيعات والتقارير</p>
     <div class="field"><label>اسم المستخدم</label><input id="loginUser" value="" autocomplete="username"></div>
     <div class="field"><label>كلمة المرور</label><input id="loginPass" value="" type="password" autocomplete="current-password"></div>
-    <button style="width:100%;margin-top:10px" onclick="doLogin()">دخول</button>
+    <form onsubmit="doLogin(); return false;">   <div class="field">     <label>اسم المستخدم</label>     <input id="loginUser" autocomplete="username">   </div>    <div class="field">     <label>كلمة المرور</label>     <input id="loginPass" type="password" autocomplete="current-password">   </div>    <button style="width:100%;margin-top:10px">دخول</button> </form>
   </div>
 </section>
 <section id="app" class="app">
