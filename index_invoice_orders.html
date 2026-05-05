@@ -88,7 +88,7 @@ button,input,select{font:inherit}button{border:0;cursor:pointer;border-radius:14
       <div class="grid forms">
         <div class="card"><h3>إضافة فاتورة / طلب</h3><form id="saleForm" onsubmit="saveSale(event)">
           <input id="editOrderId" type="hidden">
-          <div class="row"><div class="field"><label>التاريخ</label><input id="fDate" type="date" required onchange="calcInvoice()"></div><div class="field"><label>اسم العميل</label><input id="fCustomer" required></div><div class="field"><label>التوصيل</label><input id="fDelivery" type="number" step="0.01" oninput="calcInvoice()"></div></div>
+          <div class="row"><div class="field"><label>التاريخ</label><input id="fDate" type="date" required onchange="calcInvoice()"></div><div class="field"><label>اسم العميل</label><input id="fCustomer" required></div><div class="field"><label>التوصيل</label><input id="fDelivery" type="number" step="any" oninput="calcInvoice()"></div></div>
           <div class="field"><label>ملاحظات الطلب</label><input id="fNotes" placeholder="اختياري"></div>
           <div style="display:flex;justify-content:space-between;gap:10px;align-items:center;margin-top:12px"><h4 style="margin:0">منتجات الطلب</h4><button type="button" class="ghost" onclick="addInvoiceLine()">+ إضافة منتج</button></div>
           <div id="invoiceLines" class="invoice-lines"></div>
@@ -109,8 +109,8 @@ button,input,select{font:inherit}button{border:0;cursor:pointer;border-radius:14
             <input id="editProductId" type="hidden">
             <div class="row">
               <div class="field"><label>اسم المنتج</label><input id="pName" required></div>
-              <div class="field"><label>السعر للحبة</label><input id="pPrice" type="number" step="0.01" required></div>
-              <div class="field"><label>التكلفة للحبة</label><input id="pCost" type="number" step="0.01"></div>
+              <div class="field"><label>السعر للحبة</label><input id="pPrice" type="number" step="any" required></div>
+              <div class="field"><label>التكلفة للحبة</label><input id="pCost" type="number" step="any"></div>
             </div>
             <button style="margin-top:10px">حفظ المنتج</button>
             <button type="button" class="ghost" onclick="resetProductForm()">تفريغ</button>
@@ -251,8 +251,8 @@ function addInvoiceLine(data={}){
   div.innerHTML=`<div class="invoice-line-head"><b>منتج</b><button type="button" class="mini danger" onclick="removeInvoiceLine('${id}')">حذف</button></div>
     <div class="row">
       <div class="field"><label>اسم المنتج</label><input class="line-product" list="productsList" required onchange="fillLineProduct(this);calcInvoice()"></div>
-      <div class="field"><label>السعر للحبة</label><input class="line-price" type="number" step="0.01" required oninput="calcInvoice()"></div>
-      <div class="field"><label>التكلفة للحبة</label><input class="line-cost" type="number" step="0.01" oninput="calcInvoice()"></div>
+      <div class="field"><label>السعر للحبة</label><input class="line-price" type="number" step="any" required oninput="calcInvoice()"></div>
+      <div class="field"><label>التكلفة للحبة</label><input class="line-cost" type="number" step="any" oninput="calcInvoice()"></div>
     </div>
     <div class="row"><div class="field"><label>الكمية</label><input class="line-qty" type="number" step="1" min="1" required oninput="calcInvoice()"></div><div class="field"><label>مجموع المنتج</label><input class="line-total" readonly></div><div class="field"><label>ربح المنتج</label><input class="line-profit" readonly></div></div>`;
   invoiceLines.appendChild(div);
