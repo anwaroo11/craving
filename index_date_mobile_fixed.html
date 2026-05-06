@@ -1,0 +1,453 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Craving Sweet | المبيعات والتقارير</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.2/dist/jspdf.plugin.autotable.min.js"></script>
+<style>
+:root{--bg:#fff9f5;--card:#fff;--ink:#27152f;--muted:#725f78;--line:#f0d9e5;--brand:#e94b9b;--brand2:#f4b400;--ok:#16864f;--bad:#c0392b;--shadow:0 14px 40px rgba(59,30,90,.10)}
+.dark{--bg:#140c18;--card:#1f1426;--ink:#f7e9ff;--muted:#c9a8d6;--line:#3b1e5a;--brand:#e94b9b;--brand2:#7fa3d6;--shadow:0 14px 40px rgba(0,0,0,.25)}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(140deg,var(--bg),#fff);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Tahoma,Arial,sans-serif;color:var(--ink)}.dark body,body.dark{background:linear-gradient(140deg,var(--bg),#231711)}
+button,input,select{font:inherit}button{border:0;cursor:pointer;border-radius:14px;padding:10px 14px;background:linear-gradient(135deg,var(--brand),var(--brand2));color:#fff;font-weight:700;transition:.18s}button:hover{transform:translateY(-1px);opacity:.92}.ghost{background:transparent;color:var(--brand);border:1px solid var(--line)}.danger{background:var(--bad)}.ok{background:var(--ok)}
+.login{min-height:100vh;display:grid;place-items:center;padding:22px}.login-card{width:min(430px,100%);background:var(--card);border:1px solid var(--line);border-radius:28px;padding:28px;box-shadow:var(--shadow);text-align:center}.brand-mark{width:72px;height:72px;border-radius:24px;background:linear-gradient(135deg,var(--brand),var(--brand2));display:grid;place-items:center;color:#fff;font-weight:900;font-size:24px;margin:0 auto 14px}.hint{color:var(--muted);font-size:14px}.field{display:grid;gap:7px;margin:10px 0;text-align:right}.field label{font-weight:700;color:var(--muted);font-size:13px}.field input,.field select{width:100%;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:14px;padding:11px 12px;outline:0}.field input:focus,.field select:focus{border-color:var(--brand)}
+.app{display:none;min-height:100vh}.sidebar{position:fixed;inset:0 auto 0 0;width:250px;background:var(--card);border-right:1px solid var(--line);padding:22px;box-shadow:var(--shadow);z-index:5}.side-head{display:flex;gap:12px;align-items:center;margin-bottom:24px}.side-head .brand-mark{margin:0;width:48px;height:48px;border-radius:16px;font-size:17px}.nav{display:grid;gap:9px}.nav button{background:transparent;color:var(--ink);text-align:right;border:1px solid transparent}.nav button.active{background:rgba(233,75,155,.12);border-color:var(--line);color:var(--brand)}.main{margin-left:250px;padding:24px}.top{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:20px}.top h1{margin:0;font-size:28px}.actions{display:flex;gap:8px;flex-wrap:wrap}.grid{display:grid;gap:16px}.kpis{grid-template-columns:repeat(4,minmax(0,1fr))}.card{background:var(--card);border:1px solid var(--line);border-radius:24px;padding:18px;box-shadow:var(--shadow)}.kpi span{display:block;color:var(--muted);font-size:13px}.kpi strong{display:block;font-size:26px;margin-top:7px}.charts{grid-template-columns:1.3fr 1fr}.forms{grid-template-columns:repeat(2,minmax(0,1fr))}.row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:end;margin-bottom:14px}.toolbar .field{margin:0;min-width:150px}.table-wrap{overflow:auto;border:1px solid var(--line);border-radius:18px}table{width:100%;border-collapse:collapse;min-width:950px;background:var(--card)}th,td{padding:11px 10px;border-bottom:1px solid var(--line);white-space:nowrap;text-align:right}th{background:rgba(233,75,155,.10);color:var(--brand);position:sticky;top:0;z-index:1}td small{color:var(--muted)}.pill{display:inline-flex;align-items:center;border:1px solid var(--line);border-radius:999px;padding:5px 9px;background:rgba(216,155,114,.13)}.hide{display:none!important}.empty{padding:30px;text-align:center;color:var(--muted)}.note{background:rgba(216,155,114,.14);border:1px dashed var(--line);border-radius:18px;padding:12px;color:var(--muted);line-height:1.7}.mini{font-size:12px;padding:7px 9px;border-radius:10px}.modal{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;place-items:center;z-index:20;padding:20px}.modal .card{width:min(760px,100%);max-height:90vh;overflow:auto}.customer-list{display:grid;gap:10px}.customer-item{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px;border:1px solid var(--line);border-radius:16px;background:rgba(216,155,114,.08)}.year-select{min-width:130px;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:14px;padding:10px 12px;outline:0}.year-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}.year-card{border:1px solid var(--line);border-radius:18px;padding:13px;background:rgba(233,75,155,.07)}.year-card b{font-size:20px}.growth-up{color:var(--ok);font-weight:800}.growth-down{color:var(--bad);font-weight:800}.insight-list{display:grid;gap:10px}.insight-row{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;border:1px solid var(--line);border-radius:16px;padding:11px;background:rgba(233,75,155,.06)}.insight-row strong{font-size:15px}.insight-row .meta{color:var(--muted);font-size:12px;margin-top:4px}.metric-badge{font-weight:900;color:var(--brand);white-space:nowrap}.forecast-box{display:grid;gap:12px}.forecast-main{font-size:30px;font-weight:900;color:var(--brand)}.forecast-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.forecast-mini{border:1px solid var(--line);border-radius:16px;padding:11px;background:rgba(244,180,0,.09)}.forecast-mini span{display:block;color:var(--muted);font-size:12px}.forecast-mini b{display:block;margin-top:4px}.trend-chip{display:inline-flex;border-radius:999px;padding:6px 10px;font-weight:900;border:1px solid var(--line)}.invoice-lines{display:grid;gap:10px;margin:12px 0}.invoice-line{border:1px solid var(--line);border-radius:18px;padding:12px;background:rgba(233,75,155,.05)}.invoice-line-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:8px}.invoice-summary{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:12px}.invoice-summary div{border:1px solid var(--line);border-radius:16px;padding:10px;background:rgba(244,180,0,.08)}.invoice-summary span{display:block;color:var(--muted);font-size:12px}.invoice-summary b{display:block;margin-top:4px}.items-list{line-height:1.8}.order-card{border:1px solid var(--line);border-radius:18px;padding:12px;background:rgba(233,75,155,.05);margin-bottom:10px}
+@media(max-width:900px){.sidebar{position:static;width:auto;border-right:0;border-bottom:1px solid var(--line)}.main{margin-left:0;padding:16px}.nav{grid-template-columns:repeat(2,1fr)}.kpis,.charts,.forms,.row{grid-template-columns:1fr}.top{display:grid}.toolbar{display:grid}.toolbar .field{min-width:0}table{min-width:850px}.invoice-line{padding:14px;border-radius:20px}.invoice-line .row{grid-template-columns:1fr!important}.invoice-summary{grid-template-columns:repeat(2,minmax(0,1fr))}.field select.line-product{min-height:46px;font-size:16px;background:var(--card);appearance:auto}.invoice-line-head b{font-size:16px}.invoice-line .field{margin:8px 0}.top h1{font-size:24px}.actions{width:100%;display:grid;grid-template-columns:1fr 1fr}.actions .year-select{grid-column:1/-1}.side-head{justify-content:center}.nav button{text-align:center}}
+
+/* Mobile/date fixes */
+.date-input{direction:ltr!important;text-align:left!important;unicode-bidi:plaintext!important;font-family:Arial, sans-serif}
+@media(max-width:900px){
+  .field input,.field select{font-size:16px;min-height:48px}
+  select.line-product{width:100%;white-space:normal;text-overflow:ellipsis}
+  .invoice-line{margin-bottom:12px}
+}
+</style>
+</head>
+<body>
+<section id="login" class="login">
+  <div class="login-card">
+    <div class="brand-mark" style="background:none">   <img src="logo.png" style="width:100%;height:100%;object-fit:contain;"> </div>
+    <h1 style="margin:0 0 6px">Craving Sweet</h1>
+    <p class="hint">نظام المبيعات والتقارير</p>
+    <form onsubmit="doLogin(); return false;">
+      <div class="field"><label>اسم المستخدم</label><input id="loginUser" autocomplete="username" autofocus></div>
+      <div class="field"><label>كلمة المرور</label><input id="loginPass" type="password" autocomplete="current-password"></div>
+      <button style="width:100%;margin-top:10px">دخول</button>
+    </form>
+  </div>
+</section>
+<section id="app" class="app">
+  <aside class="sidebar">
+    <div class="side-head"><div class="brand-mark" style="background:none">   <img src="logo.png" style="width:100%;height:100%;object-fit:contain;"> </div><div><b>Craving Sweet</b><div class="hint">Sales Dashboard</div></div></div>
+    <div class="nav">
+      <button class="active" onclick="showTab('dashboard',this)">لوحة التحكم</button>
+      <button onclick="showTab('sales',this)">المبيعات</button>
+      <button onclick="showTab('add',this)">إضافة بيع</button>
+      <button onclick="showTab('customers',this)">العملاء</button>
+      <button onclick="showTab('products',this)">المنتجات</button>
+      <button onclick="showTab('reports',this)">التقارير PDF</button>
+      <button onclick="showTab('upload',this)">رفع Excel</button>
+    </div>
+  </aside>
+  <main class="main">
+    <div class="top"><h1 id="pageTitle">لوحة التحكم</h1><div class="actions"><select id="globalYear" class="year-select" onchange="renderAll()"><option value="all">كل السنوات</option></select><button class="ghost" onclick="toggleDark()">الوضع الليلي</button><button class="ghost" onclick="logout()">خروج</button></div></div>
+    <section id="dashboard" class="tab">
+      <div class="grid kpis">
+        <div class="card kpi"><span>إجمالي المبيعات</span><strong id="kSales">0 ر.س</strong></div>
+        <div class="card kpi"><span>إجمالي الأرباح</span><strong id="kProfit">0 ر.س</strong></div>
+        <div class="card kpi"><span>رسوم التوصيل</span><strong id="kDelivery">0 ر.س</strong></div>
+        <div class="card kpi"><span>عدد الطلبات</span><strong id="kOrders">0</strong></div>
+      </div>
+      <div class="grid charts" style="margin-top:16px">
+        <div class="card"><h3>المبيعات حسب التاريخ</h3><canvas id="salesChart" height="130"></canvas></div>
+        <div class="card"><h3>أفضل المنتجات</h3><canvas id="productsChart" height="180"></canvas></div>
+      </div>
+      <div class="grid charts" style="margin-top:16px">
+        <div class="card"><h3>أكثر المنتجات مبيعًا</h3><div id="topProductsList"></div></div>
+        <div class="card"><h3>ربح لكل منتج</h3><div id="productProfitList"></div></div>
+      </div>
+      <div class="grid charts" style="margin-top:16px">
+        <div class="card"><h3>توقع المبيعات الذكي</h3><div id="salesForecastBox"></div></div>
+        <div class="card"><h3>ملاحظات سريعة</h3><div id="quickInsightsBox"></div></div>
+      </div>
+      <div class="grid charts" style="margin-top:16px">
+        <div class="card"><h3>ملخص السنوات</h3><div id="yearSummary"></div></div>
+        <div class="card"><h3>مقارنة المبيعات السنوية</h3><canvas id="yearlyChart" height="150"></canvas></div>
+      </div>
+      <div class="card" style="margin-top:16px"><h3>آخر الطلبات</h3><div id="recentTable"></div></div>
+    </section>
+    <section id="sales" class="tab hide">
+      <div class="card">
+        <div class="toolbar">
+          <div class="field"><label>من تاريخ</label><input id="filterFrom" class="date-input" type="text" inputmode="numeric" placeholder="YYYY-MM-DD" dir="ltr" lang="en" pattern="\d{4}-\d{2}-\d{2}" onchange="renderAll()"></div>
+          <div class="field"><label>إلى تاريخ</label><input id="filterTo" class="date-input" type="text" inputmode="numeric" placeholder="YYYY-MM-DD" dir="ltr" lang="en" pattern="\d{4}-\d{2}-\d{2}" onchange="renderAll()"></div>
+          <div class="field"><label>بحث عميل/منتج</label><input id="searchBox" placeholder="اكتب للبحث" oninput="renderAll()"></div>
+          <button class="ghost" onclick="clearFilters()">مسح الفلاتر</button>
+          <button class="danger" onclick="clearAllData()">حذف كل البيانات</button>
+        </div>
+        <div class="hint" id="activeYearHint" style="margin-bottom:10px"></div><div id="salesTable"></div>
+      </div>
+    </section>
+    <section id="add" class="tab hide">
+      <div class="grid forms">
+        <div class="card"><h3>إضافة فاتورة / طلب</h3><form id="saleForm" onsubmit="saveSale(event)">
+          <input id="editOrderId" type="hidden">
+          <div class="row"><div class="field"><label>التاريخ</label><input id="fDate" class="date-input" type="text" inputmode="numeric" placeholder="YYYY-MM-DD" dir="ltr" lang="en" pattern="\d{4}-\d{2}-\d{2}" required onchange="calcInvoice()"></div><div class="field"><label>اسم العميل</label><input id="fCustomer" required></div><div class="field"><label>التوصيل</label><input id="fDelivery" type="number" step="any" oninput="calcInvoice()"></div></div>
+          <div class="field"><label>ملاحظات الطلب</label><input id="fNotes" placeholder="اختياري"></div>
+          <div style="display:flex;justify-content:space-between;gap:10px;align-items:center;margin-top:12px"><h4 style="margin:0">منتجات الطلب</h4><button type="button" class="ghost" onclick="addInvoiceLine()">+ إضافة منتج</button></div>
+          <div id="invoiceLines" class="invoice-lines"></div>
+          <div class="invoice-summary" id="formCalc">
+            <div><span>المجموع</span><b>0 ر.س</b></div><div><span>الأرباح</span><b>0 ر.س</b></div><div><span>التوصيل</span><b>0 ر.س</b></div><div><span>عدد المنتجات</span><b>0</b></div>
+          </div>
+          <button style="margin-top:14px">حفظ الطلب</button><button type="button" class="ghost" onclick="resetForm()">تفريغ</button>
+        </form></div>
+        <div class="card"><h3>قائمة المنتجات المحفوظة</h3><datalist id="productsList"></datalist><div id="productCatalog"></div></div>
+      </div>
+    </section>
+    <section id="customers" class="tab hide"><div class="card"><h3>العملاء</h3><div id="customersList"></div></div></section>
+    <section id="products" class="tab hide">
+      <div class="grid forms">
+        <div class="card">
+          <h3>إدارة المنتجات</h3>
+          <form id="productForm" onsubmit="saveProduct(event)">
+            <input id="editProductId" type="hidden">
+            <div class="row">
+              <div class="field"><label>اسم المنتج</label><input id="pName" required></div>
+              <div class="field"><label>السعر للحبة</label><input id="pPrice" type="number" step="any" required></div>
+              <div class="field"><label>التكلفة للحبة</label><input id="pCost" type="number" step="any"></div>
+            </div>
+            <button style="margin-top:10px">حفظ المنتج</button>
+            <button type="button" class="ghost" onclick="resetProductForm()">تفريغ</button>
+          </form>
+          <p class="note" style="margin-top:14px">أي منتج تضيفه هنا يظهر مباشرة في صفحة إضافة البيع، ويتزامن مع Google Sheets عشان يظهر في كل الأجهزة.</p>
+        </div>
+        <div class="card">
+          <h3>قائمة المنتجات</h3>
+          <div id="productsTable"></div>
+        </div>
+      </div>
+    </section>
+    <section id="reports" class="tab hide">
+      <div class="card"><h3>تصدير تقرير PDF</h3><div class="toolbar">
+        <div class="field"><label>السنة</label><select id="pdfYear"><option value="all">كل السنوات</option></select></div><div class="field"><label>من تاريخ</label><input id="pdfFrom" class="date-input" type="text" inputmode="numeric" placeholder="YYYY-MM-DD" dir="ltr" lang="en" pattern="\d{4}-\d{2}-\d{2}"></div><div class="field"><label>إلى تاريخ</label><input id="pdfTo" class="date-input" type="text" inputmode="numeric" placeholder="YYYY-MM-DD" dir="ltr" lang="en" pattern="\d{4}-\d{2}-\d{2}"></div><div class="field"><label>اسم العميل اختياري</label><input id="pdfCustomer" placeholder="اتركه فارغ للكل"></div><button onclick="exportPDF()">تحميل PDF</button><button class="ok" onclick="exportExcel()">تصدير Excel</button>
+      </div><div class="note">التقرير يستخدم البيانات المخزنة في المتصفح. بعد رفع ملف Excel أو إضافة مبيعات يدويًا اضغط تحميل PDF.</div></div>
+    </section>
+    <section id="upload" class="tab hide">
+      <div class="card"><h3>رفع ملف Excel</h3><input type="file" id="excelFile" accept=".xlsx,.xls" onchange="importExcel(event)"><p class="note">يدعم أعمدة ملفك: اليوم، التاريخ، الاسم، اسم المنتج، السعر (للواحد)، التكلفة (للواحد)، الكمية، المجموع، الأرباح، توصيل، ملاحظات. يقرأ شيتات السنوات مثل 2024 و 2025 ويتجاهل الملخص والمنتجات.</p><div id="uploadMsg" class="hint"></div></div>
+    </section>
+  </main>
+</section>
+<div id="modal" class="modal" onclick="if(event.target.id==='modal')closeModal()"><div class="card"><div style="display:flex;justify-content:space-between;gap:10px"><h3 id="modalTitle"></h3><button class="ghost" onclick="closeModal()">إغلاق</button></div><div id="modalBody"></div></div></div>
+<script>
+ LOGIN_USER='craving',LOGIN_PASS='19971997',STORE='cs_sales_v1',AUTH='cs_auth_v1',DARK='cs_dark_v1';
+// ============================================================
+// Google Sheets Sync
+// حط رابط Google Apps Script Web App هنا فقط بين علامتي التنصيص
+// مثال: const GOOGLE_SCRIPT_URL='https://script.google.com/macros/s/XXXXX/exec';
+const GOOGLE_SCRIPT_URL='https://script.google.com/macros/s/AKfycbxxw84ZV1vY-qOeQsqwLVjYC6yQATsA-pAUClw74V3_5SYCwzQpa4Nz98kfvYh2EOam3Q/exec';
+const CLOUD_ON=GOOGLE_SCRIPT_URL.startsWith('https://script.google.com/macros/s/');
+// ============================================================
+let sales=[],products=[],salesChart,productsChart,yearlyChart;
+const PRODUCTS_STORE='cs_products_v1';
+const DEFAULT_PRODUCTS=[{"id":"p001","name":"تارت البيكان","price":6,"cost":5.6},{"id":"p002","name":"كوكيز رهش","price":4.1,"cost":1.09},{"id":"p003","name":"دولتشي","price":4.5,"cost":1.3},{"id":"p004","name":"كب كوكيز","price":3.3333333,"cost":1.94},{"id":"p005","name":"كرانشي","price":5,"cost":2.72},{"id":"p006","name":"كب كنافة","price":4.1,"cost":1.6},{"id":"p007","name":"كريفنق","price":5,"cost":2.15},{"id":"p008","name":"كوكيز البيكان","price":3.3333333,"cost":1.12},{"id":"p009","name":"بيستاشيو","price":5,"cost":2.4},{"id":"p010","name":"كرات البيكان","price":2.5,"cost":2.5},{"id":"p011","name":"كوكيز الشوفان","price":3.3333333,"cost":1.12},{"id":"p012","name":"مشكل ميني","price":4.1,"cost":4.1},{"id":"p013","name":"مشكل عادي","price":3.3333333,"cost":3.3333333},{"id":"p014","name":"كوكيز بيكان","price":0,"cost":0}];
+function n(v){if(v===null||v===undefined||v==='')return 0;let x=String(v).replace(/[٬,]/g,'').replace(/[^0-9.\-]/g,'');return Number(x)||0}
+function money(v){return n(v).toLocaleString('en-US',{maximumFractionDigits:2})+' ر.س'}
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,7)}
+function pad(x){return String(x).padStart(2,'0')}
+function todayISO(){let d=new Date();return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`}
+function normalizeDateInput(el){if(!el||!el.value)return;el.value=dateISO(el.value)}
+function dateISO(v){if(!v)return '';if(v instanceof Date&&!isNaN(v))return `${v.getFullYear()}-${pad(v.getMonth()+1)}-${pad(v.getDate())}`;if(typeof v==='number'){let d=XLSX.SSF.parse_date_code(v);return d?`${d.y}-${pad(d.m)}-${pad(d.d)}`:''}let s=String(v).trim(),m=s.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{2,4})$/);if(m){let y=+m[3];if(y<100)y+=2000;return `${y}-${pad(m[2])}-${pad(m[1])}`}let d=new Date(s);return isNaN(d)?s:d.toISOString().slice(0,10)}
+function dayName(d){return d?new Intl.DateTimeFormat('ar-SA',{weekday:'long'}).format(new Date(d+'T12:00:00')):''}
+function save(){localStorage.setItem(STORE,JSON.stringify(sales))}
+function saleYear(x){let d=String(x?.date||'');let y=d.slice(0,4);return /^\d{4}$/.test(y)?y:''}
+function selectedYear(){return document.getElementById('globalYear')?.value||'all'}
+function applyYear(arr,year=selectedYear()){return year==='all'?arr:arr.filter(x=>saleYear(x)===year)}
+function buildYearOptions(){
+  let years=[...new Set(sales.map(saleYear).filter(Boolean))].sort((a,b)=>b.localeCompare(a));
+  ['globalYear','pdfYear'].forEach(id=>{
+    let el=document.getElementById(id); if(!el)return;
+    let current=el.value||'all';
+    el.innerHTML='<option value="all">كل السنوات</option>'+years.map(y=>`<option value="${y}">${y}</option>`).join('');
+    el.value=years.includes(current)||current==='all'?current:'all';
+  });
+}
+function ensureProductIds(){products=products.map((p,i)=>({id:p.id||('p_'+String(i+1).padStart(3,'0')+'_'+String(p.name||'').replace(/\s+/g,'_')),name:String(p.name||'').trim(),price:n(p.price),cost:n(p.cost)})).filter(p=>p.name)}
+function saveProductsLocal(){ensureProductIds();localStorage.setItem(PRODUCTS_STORE,JSON.stringify(products))}
+function loadProductsLocal(){let local=JSON.parse(localStorage.getItem(PRODUCTS_STORE)||'[]');products=(local&&local.length?local:DEFAULT_PRODUCTS.slice());saveProductsLocal()}
+
+function postToGoogle(payload){
+  if(!CLOUD_ON) return;
+  fetch(GOOGLE_SCRIPT_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload)})
+    .catch(err=>console.warn('Google Sheets sync failed',err));
+}
+function upsertCloud(item){postToGoogle({action:'upsert',sale:item})}
+function bulkUpsertCloud(items){if(items&&items.length)postToGoogle({action:'bulkUpsert',sales:items})}
+function deleteCloud(id){postToGoogle({action:'delete',id})}
+function deleteOrderCloud(orderId){postToGoogle({action:'deleteOrder',orderId})}
+function clearCloud(){postToGoogle({action:'clear'})}
+function upsertProductCloud(item){postToGoogle({action:'upsertProduct',product:item})}
+function deleteProductCloud(id){postToGoogle({action:'deleteProduct',id})}
+function loadFromGoogle(){
+  if(!CLOUD_ON) return;
+  const cb='csSheetCallback_'+Date.now();
+  window[cb]=function(rows){
+    try{
+      if(Array.isArray(rows)){
+        sales=rows.map(normalizeCloudRow).filter(x=>x.date&&x.customer&&x.product);
+        save();
+        mergeProductsFromSales(sales,true);
+      }else if(rows&&typeof rows==='object'){
+        if(Array.isArray(rows.sales)){sales=rows.sales.map(normalizeCloudRow).filter(x=>x.date&&x.customer&&x.product);save();mergeProductsFromSales(sales,true)}
+        if(Array.isArray(rows.products)&&rows.products.length){products=rows.products.map(normalizeProductRow).filter(p=>p.name);saveProductsLocal();initProducts()}
+      }
+      renderAll();
+    }catch(e){console.warn('Google Sheets load failed',e)}
+    finally{delete window[cb]; const el=document.getElementById(cb); if(el)el.remove();}
+  };
+  const sc=document.createElement('script');
+  sc.id=cb;
+  sc.src=GOOGLE_SCRIPT_URL+'?action=list&callback='+cb+'&t='+Date.now();
+  sc.onerror=function(){console.warn('Could not read Google Sheets'); delete window[cb]; sc.remove();};
+  document.body.appendChild(sc);
+}
+function normalizeCloudRow(r){
+  let date=dateISO(r.date||r.Date||r['التاريخ']);
+  let orderId=String(r.orderId||r.order_id||r['رقم الطلب']||r.id||uid());
+  return {id:String(r.id||uid()),orderId,itemIndex:n(r.itemIndex||r.item_index||r['ترتيب المنتج']),day:r.day||r.Day||r['اليوم']||dayName(date),date,customer:String(r.customer||r.Customer||r['الاسم']||'').trim(),product:String(r.product||r.Product||r['اسم المنتج']||'').trim(),price:n(r.price||r.Price||r['السعر (للواحد)']),cost:n(r.cost||r.Cost||r['التكلفة (للواحد)']),qty:n(r.qty||r.quantity||r.Quantity||r['الكمية']),total:n(r.total||r.Total||r['المجموع']),profit:n(r.profit||r.Profit||r['الأرباح']),delivery:n(r.delivery||r.Delivery||r['توصيل']),orderTotal:n(r.orderTotal||r.order_total||r['مجموع الطلب']),orderProfit:n(r.orderProfit||r.order_profit||r['ربح الطلب']),notes:String(r.notes||r.Notes||r['ملاحظات']||'').trim(),source:r.source||'Google Sheets'};
+}
+function normalizeProductRow(r){return {id:String(r.id||r.ID||uid()),name:String(r.name||r.Name||r['اسم المنتج']||'').trim(),price:n(r.price||r.Price||r['السعر']||r['السعر للحبة']),cost:n(r.cost||r.Cost||r['التكلفة']||r['التكلفة للحبة'])}}
+function productIdFromName(name){let h=0;String(name).split('').forEach(ch=>{h=((h<<5)-h)+ch.charCodeAt(0);h|=0});return 'prod_'+Math.abs(h)}
+function mergeProductsFromSales(items=[],sync=true){
+  let changed=[];
+  items.forEach(x=>{
+    let name=String(x.product||'').trim(); if(!name)return;
+    let existing=products.find(p=>p.name===name);
+    if(existing){
+      let updated=false;
+      if(!n(existing.price)&&n(x.price)){existing.price=n(x.price);updated=true}
+      if(!n(existing.cost)&&n(x.cost)){existing.cost=n(x.cost);updated=true}
+      if(updated)changed.push(existing);
+    }else{
+      let p={id:productIdFromName(name),name,price:n(x.price),cost:n(x.cost)};
+      products.push(p); changed.push(p);
+    }
+  });
+  if(changed.length){saveProductsLocal();initProducts();if(sync)changed.forEach(p=>upsertProductCloud(p));}
+  return changed.length;
+}
+function load(){sales=JSON.parse(localStorage.getItem(STORE)||'[]')}
+function doLogin(){if(loginUser.value.trim()===LOGIN_USER&&loginPass.value===LOGIN_PASS){localStorage.setItem(AUTH,'1');boot()}else alert('بيانات الدخول غير صحيحة')}
+function logout(){localStorage.removeItem(AUTH);location.reload()}
+function toggleDark(){document.body.classList.toggle('dark');localStorage.setItem(DARK,document.body.classList.contains('dark')?'1':'0')}
+function boot(){if(localStorage.getItem(DARK)==='1')document.body.classList.add('dark');if(localStorage.getItem(AUTH)==='1'){document.getElementById('login').style.display='none';app.style.display='block';load();loadProductsLocal();initProducts();fDate.value=todayISO();resetInvoiceLines();document.querySelectorAll('.date-input').forEach(el=>el.addEventListener('blur',()=>normalizeDateInput(el)));renderAll();loadFromGoogle()}}
+function showTab(id,btn){document.querySelectorAll('.tab').forEach(x=>x.classList.add('hide'));document.getElementById(id).classList.remove('hide');document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('active'));btn.classList.add('active');pageTitle.textContent=btn.textContent;renderAll()}
+function productOptionsHtml(selected=''){
+  ensureProductIds();
+  let names=new Set(products.map(p=>p.name));
+  let extra=selected&&!names.has(selected)?`<option value="${selected}">${selected}</option>`:'';
+  return '<option value="">اختر المنتج</option>'+extra+products.map(p=>`<option value="${p.name}">${p.name}</option>`).join('');
+}
+function refreshProductSelects(){
+  document.querySelectorAll('select.line-product').forEach(sel=>{let current=sel.value;sel.innerHTML=productOptionsHtml(current);sel.value=current;});
+}
+function initProducts(){ensureProductIds();productsList.innerHTML=products.map(p=>`<option value="${p.name}"></option>`).join('');productCatalog.innerHTML='<div class="table-wrap"><table><tr><th>المنتج</th><th>السعر</th><th>التكلفة</th></tr>'+products.map(p=>`<tr><td>${p.name}</td><td>${money(p.price)}</td><td>${money(p.cost)}</td></tr>`).join('')+'</table></div>';renderProducts();refreshProductSelects()}
+function fillProduct(){let p=products.find(x=>x.name===fProduct.value);if(p){fPrice.value=p.price;fCost.value=p.cost;calcForm()}}
+function resetProductForm(){if(typeof productForm!=='undefined'){productForm.reset();editProductId.value=''}}
+function saveProduct(e){
+  e.preventDefault();
+  let product={id:editProductId.value||uid(),name:pName.value.trim(),price:n(pPrice.value),cost:n(pCost.value)};
+  if(!product.name){alert('اكتب اسم المنتج');return}
+  products=editProductId.value?products.map(x=>x.id===editProductId.value?product:x):products.concat(product);
+  saveProductsLocal();
+  upsertProductCloud(product);
+  initProducts();
+  resetProductForm();
+  alert('تم حفظ المنتج');
+}
+function editProduct(id){let p=products.find(x=>x.id===id);if(!p)return;showTab('products',document.querySelectorAll('.nav button')[4]);editProductId.value=p.id;pName.value=p.name;pPrice.value=p.price;pCost.value=p.cost}
+function deleteProduct(id){if(confirm('حذف المنتج؟')){products=products.filter(x=>x.id!==id);saveProductsLocal();deleteProductCloud(id);initProducts()}}
+function renderProducts(){
+  const el=document.getElementById('productsTable');
+  if(!el)return;
+  if(!products.length){el.innerHTML='<div class="empty">لا توجد منتجات</div>';return}
+  el.innerHTML='<div class="table-wrap"><table><thead><tr><th>المنتج</th><th>السعر للحبة</th><th>التكلفة للحبة</th><th>إجراءات</th></tr></thead><tbody>'+products.map(p=>`<tr><td>${p.name}</td><td>${money(p.price)}</td><td>${money(p.cost)}</td><td><button class="mini ghost" onclick="editProduct('${p.id}')">تعديل</button> <button class="mini danger" onclick="deleteProduct('${p.id}')">حذف</button></td></tr>`).join('')+'</tbody></table></div>'
+}
+
+function resetInvoiceLines(lines){
+  invoiceLines.innerHTML='';
+  (lines&&lines.length?lines:[{}]).forEach(x=>addInvoiceLine(x));
+  calcInvoice();
+}
+function addInvoiceLine(data={}){
+  const id='line_'+uid();
+  const div=document.createElement('div');
+  div.className='invoice-line';
+  div.dataset.lineId=id;
+  div.innerHTML=`<div class="invoice-line-head"><b>منتج</b><button type="button" class="mini danger" onclick="removeInvoiceLine('${id}')">حذف</button></div>
+    <div class="row">
+      <div class="field"><label>اسم المنتج</label><select class="line-product" required onchange="fillLineProduct(this);calcInvoice()"></select></div>
+      <div class="field"><label>السعر للحبة</label><input class="line-price" type="number" step="any" required oninput="calcInvoice()"></div>
+      <div class="field"><label>التكلفة للحبة</label><input class="line-cost" type="number" step="any" oninput="calcInvoice()"></div>
+    </div>
+    <div class="row"><div class="field"><label>الكمية</label><input class="line-qty" type="number" step="1" min="1" required oninput="calcInvoice()"></div><div class="field"><label>مجموع المنتج</label><input class="line-total" readonly></div><div class="field"><label>ربح المنتج</label><input class="line-profit" readonly></div></div>`;
+  invoiceLines.appendChild(div);
+  const sel=div.querySelector('.line-product');
+  sel.innerHTML=productOptionsHtml(data.product||'');
+  sel.value=data.product||'';
+  div.querySelector('.line-price').value=data.price??'';
+  div.querySelector('.line-cost').value=data.cost??'';
+  div.querySelector('.line-qty').value=data.qty??1;
+  calcInvoice();
+}
+function removeInvoiceLine(id){
+  if(document.querySelectorAll('.invoice-line').length<=1){alert('لازم يكون فيه منتج واحد على الأقل');return}
+  document.querySelector(`[data-line-id="${id}"]`)?.remove();
+  calcInvoice();
+}
+function fillLineProduct(input){
+  let p=products.find(x=>x.name===input.value);
+  if(!p)return;
+  let row=input.closest('.invoice-line');
+  row.querySelector('.line-price').value=p.price;
+  row.querySelector('.line-cost').value=p.cost;
+}
+function getInvoiceLines(){
+  return [...document.querySelectorAll('.invoice-line')].map((row,i)=>{
+    let product=row.querySelector('.line-product').value.trim();
+    let price=n(row.querySelector('.line-price').value),cost=n(row.querySelector('.line-cost').value),qty=n(row.querySelector('.line-qty').value);
+    let total=price*qty,profit=total-(cost*qty);
+    return {itemIndex:i+1,product,price,cost,qty,total,profit};
+  }).filter(x=>x.product&&x.qty>0);
+}
+function calcInvoice(){
+  let lines=getInvoiceLines();
+  document.querySelectorAll('.invoice-line').forEach(row=>{
+    let price=n(row.querySelector('.line-price').value),cost=n(row.querySelector('.line-cost').value),qty=n(row.querySelector('.line-qty').value);
+    row.querySelector('.line-total').value=fmt(price*qty);
+    row.querySelector('.line-profit').value=fmt((price*qty)-(cost*qty));
+  });
+  let subtotal=lines.reduce((a,x)=>a+x.total,0),profit=lines.reduce((a,x)=>a+x.profit,0),delivery=n(fDelivery.value);
+  formCalc.innerHTML=`<div><span>المجموع</span><b>${money(subtotal)}</b></div><div><span>الأرباح</span><b>${money(profit)}</b></div><div><span>التوصيل</span><b>${money(delivery)}</b></div><div><span>عدد المنتجات</span><b>${fmt(lines.reduce((a,x)=>a+x.qty,0))}</b></div>`;
+}
+function saveSale(e){
+  e.preventDefault();
+  normalizeDateInput(fDate);
+  let lines=getInvoiceLines();
+  if(!lines.length){alert('أضف منتج واحد على الأقل');return}
+  let orderId=editOrderId.value||uid(),date=fDate.value,day=dayName(date),customer=fCustomer.value.trim(),delivery=n(fDelivery.value),notes=fNotes.value.trim();
+  let orderTotal=lines.reduce((a,x)=>a+x.total,0),orderProfit=lines.reduce((a,x)=>a+x.profit,0);
+  let items=lines.map((line,i)=>({id:uid(),orderId,itemIndex:i+1,day,date,customer,product:line.product,price:line.price,cost:line.cost,qty:line.qty,total:line.total,profit:line.profit,delivery:i===0?delivery:0,orderTotal,orderProfit,notes,source:editOrderId.value?'فاتورة معدلة':'فاتورة'}));
+  if(editOrderId.value){sales=sales.filter(x=>(x.orderId||x.id)!==orderId);deleteOrderCloud(orderId)}
+  sales=sales.concat(items);
+  save();
+  bulkUpsertCloud(items);
+  resetForm();renderAll();alert('تم حفظ الطلب');
+}
+function resetForm(){saleForm.reset();editOrderId.value='';fDate.value=todayISO();resetInvoiceLines()}
+function orderGroups(arr){
+  let map={};
+  arr.forEach(x=>{let oid=x.orderId||x.id;if(!map[oid])map[oid]={orderId:oid,date:x.date,day:x.day||dayName(x.date),customer:x.customer,delivery:0,notes:x.notes||'',items:[],sales:0,profit:0,qty:0};map[oid].items.push(x);map[oid].sales+=n(x.total);map[oid].profit+=n(x.profit);map[oid].delivery+=n(x.delivery);map[oid].qty+=n(x.qty)});
+  return Object.values(map).sort((a,b)=>(b.date||'').localeCompare(a.date||''));
+}
+function filtered(base=sales,from=filterFrom?.value,to=filterTo?.value,q=searchBox?.value){let year=selectedYear();return base.filter(x=>(year==='all'||saleYear(x)===year)&&(!from||x.date>=from)&&(!to||x.date<=to)&&(!q||[x.customer,x.product,x.notes,x.date].join(' ').toLowerCase().includes(q.toLowerCase()))).sort((a,b)=>(b.date||'').localeCompare(a.date||''))}
+function totals(arr){let ids=new Set();let t=arr.reduce((a,x)=>{a.sales+=n(x.total);a.profit+=n(x.profit);a.delivery+=n(x.delivery);ids.add(x.orderId||x.id);return a},{sales:0,profit:0,delivery:0,orders:0});t.orders=ids.size;return t}
+function renderAll(){buildYearOptions();let arr=filtered(),t=totals(arr),y=selectedYear();kSales.textContent=money(t.sales);kProfit.textContent=money(t.profit);kDelivery.textContent=money(t.delivery);kOrders.textContent=t.orders;if(document.getElementById('activeYearHint'))activeYearHint.textContent=y==='all'?'عرض كل السنوات':'عرض سنة '+y;renderCharts(arr);renderProductInsights(arr);renderForecast(arr);renderYearSummary();renderTable('salesTable',arr,true);renderTable('recentTable',arr.slice(0,8),false);renderCustomers(arr)}
+function renderTable(id,arr,actions){
+  let el=document.getElementById(id);if(!el)return;if(!arr.length){el.innerHTML='<div class="empty">لا توجد بيانات</div>';return}
+  let orders=orderGroups(arr);
+  el.innerHTML='<div class="table-wrap"><table><thead><tr><th>اليوم</th><th>التاريخ</th><th>العميل</th><th>المنتجات</th><th>الكمية</th><th>المجموع</th><th>الأرباح</th><th>توصيل</th><th>ملاحظات</th><th>إجراءات</th></tr></thead><tbody>'+orders.map(o=>`<tr><td>${o.day||''}</td><td>${o.date||''}</td><td>${o.customer||''}</td><td><div class="items-list">${o.items.sort((a,b)=>n(a.itemIndex)-n(b.itemIndex)).map(i=>`${i.product} × ${fmt(i.qty)} <small>(${money(i.total)})</small>`).join('<br>')}</div></td><td>${fmt(o.qty)}</td><td>${money(o.sales)}</td><td>${money(o.profit)}</td><td>${money(o.delivery)}</td><td><small>${o.notes||''}</small></td><td>${actions?`<button class="mini ghost" onclick="editSale('${o.orderId}')">تعديل</button> <button class="mini danger" onclick="deleteSale('${o.orderId}')">حذف</button>`:''}</td></tr>`).join('')+'</tbody></table></div>'
+}
+function editSale(orderId){
+  let rows=sales.filter(a=>(a.orderId||a.id)===orderId).sort((a,b)=>n(a.itemIndex)-n(b.itemIndex));if(!rows.length)return;
+  showTab('add',document.querySelectorAll('.nav button')[2]);let first=rows[0];editOrderId.value=orderId;fDate.value=first.date;fCustomer.value=first.customer;fDelivery.value=rows.reduce((a,x)=>a+n(x.delivery),0);fNotes.value=first.notes||'';resetInvoiceLines(rows.map(x=>({product:x.product,price:x.price,cost:x.cost,qty:x.qty})));
+}
+function deleteSale(orderId){if(confirm('حذف الطلب كامل؟')){sales=sales.filter(x=>(x.orderId||x.id)!==orderId);save();deleteOrderCloud(orderId);renderAll()}}
+function clearAllData(){if(confirm('متأكد حذف كل البيانات المخزنة؟')){sales=[];save();clearCloud();renderAll()}}
+function clearFilters(){filterFrom.value='';filterTo.value='';searchBox.value='';if(document.getElementById('globalYear'))globalYear.value='all';renderAll()}
+function groupSum(arr,key,field='total'){return arr.reduce((a,x)=>{let k=x[key]||'غير محدد';a[k]=(a[k]||0)+n(x[field]);return a},{})}
+function topEntries(obj,limit=8){return Object.entries(obj).sort((a,b)=>b[1]-a[1]).slice(0,limit)}
+function productStats(arr){
+  let out={};
+  arr.forEach(x=>{
+    let name=x.product||'غير محدد';
+    if(!out[name])out[name]={product:name,qty:0,sales:0,profit:0,cost:0,orders:0,delivery:0};
+    out[name].qty+=n(x.qty);
+    out[name].sales+=n(x.total);
+    out[name].profit+=n(x.profit);
+    out[name].cost+=n(x.cost)*n(x.qty);
+    out[name].delivery+=n(x.delivery);
+    out[name].orders++;
+  });
+  return Object.values(out).map(x=>({...x,margin:x.sales?x.profit/x.sales*100:0}));
+}
+function renderProductInsights(arr){
+  let stats=productStats(arr);
+  let topEl=document.getElementById('topProductsList'),profitEl=document.getElementById('productProfitList');
+  if(topEl){
+    let top=stats.slice().sort((a,b)=>b.qty-a.qty||b.sales-a.sales).slice(0,5);
+    topEl.innerHTML=top.length?'<div class="insight-list">'+top.map((x,i)=>`<div class="insight-row"><div><strong>${i+1}. ${x.product}</strong><div class="meta">${fmt(x.qty)} حبة | ${x.orders} طلب | مبيعات ${money(x.sales)}</div></div><div class="metric-badge">${fmt(x.qty)}</div></div>`).join('')+'</div>':'<div class="empty">لا توجد بيانات منتجات</div>';
+  }
+  if(profitEl){
+    let topProfit=stats.slice().sort((a,b)=>b.profit-a.profit).slice(0,5);
+    profitEl.innerHTML=topProfit.length?'<div class="insight-list">'+topProfit.map((x,i)=>`<div class="insight-row"><div><strong>${i+1}. ${x.product}</strong><div class="meta">مبيعات ${money(x.sales)} | هامش ${fmt(x.margin)}%</div></div><div class="metric-badge">${money(x.profit)}</div></div>`).join('')+'</div>':'<div class="empty">لا توجد بيانات أرباح</div>';
+  }
+}
+function daysInMonth(y,m){return new Date(y,m,0).getDate()}
+function parseDateObj(s){let d=new Date(String(s||'')+'T12:00:00');return isNaN(d)?null:d}
+function renderForecast(arr){
+  let el=document.getElementById('salesForecastBox'),notes=document.getElementById('quickInsightsBox');
+  if(!el&&!notes)return;
+  let dated=arr.map(x=>({...x,_d:parseDateObj(x.date)})).filter(x=>x._d).sort((a,b)=>a._d-b._d);
+  if(!dated.length){
+    if(el)el.innerHTML='<div class="empty">لا توجد بيانات كافية للتوقع</div>';
+    if(notes)notes.innerHTML='<div class="empty">أضف مبيعات أكثر عشان تظهر الملاحظات</div>';
+    return;
+  }
+  let latest=dated[dated.length-1]._d;
+  let start30=new Date(latest);start30.setDate(start30.getDate()-29);
+  let start7=new Date(latest);start7.setDate(start7.getDate()-6);
+  let prev7Start=new Date(latest);prev7Start.setDate(prev7Start.getDate()-13);
+  let prev7End=new Date(latest);prev7End.setDate(prev7End.getDate()-7);
+  let last30=dated.filter(x=>x._d>=start30&&x._d<=latest);
+  let last7=dated.filter(x=>x._d>=start7&&x._d<=latest);
+  let prev7=dated.filter(x=>x._d>=prev7Start&&x._d<=prev7End);
+  let month=latest.getMonth()+1,year=latest.getFullYear(),dim=daysInMonth(year,month);
+  let monthStart=`${year}-${pad(month)}-01`,monthEnd=`${year}-${pad(month)}-${pad(dim)}`;
+  let monthRows=dated.filter(x=>x.date>=monthStart&&x.date<=monthEnd);
+  let sum30=totals(last30).sales,avg30=sum30/30;
+  let projected=avg30*dim;
+  let currentMonthSales=totals(monthRows).sales;
+  let avg7=totals(last7).sales/7,avgPrev7=totals(prev7).sales/7;
+  let trend=avgPrev7?((avg7-avgPrev7)/avgPrev7*100):0;
+  let trendText=avgPrev7?`${trend>=0?'📈 صاعد':'📉 نازل'} ${trend>=0?'+':''}${fmt(trend)}% مقارنة بالأسبوع السابق`:'بيانات الأسبوع السابق غير كافية';
+  if(el)el.innerHTML=`<div class="forecast-box"><div><div class="hint">توقع مبيعات شهر ${year}-${pad(month)} بناءً على متوسط آخر 30 يوم</div><div class="forecast-main">${money(projected)}</div><span class="trend-chip ${trend>=0?'growth-up':'growth-down'}">${trendText}</span></div><div class="forecast-grid"><div class="forecast-mini"><span>مبيعات الشهر الحالية</span><b>${money(currentMonthSales)}</b></div><div class="forecast-mini"><span>متوسط يومي 30 يوم</span><b>${money(avg30)}</b></div><div class="forecast-mini"><span>عدد أيام الشهر</span><b>${dim}</b></div></div></div>`;
+  if(notes){
+    let stats=productStats(arr),bestSales=stats.slice().sort((a,b)=>b.sales-a.sales)[0],bestProfit=stats.slice().sort((a,b)=>b.profit-a.profit)[0],lowMargin=stats.filter(x=>x.sales>0).sort((a,b)=>a.margin-b.margin)[0];
+    let lines=[];
+    if(bestSales)lines.push(`<div class="insight-row"><div><strong>أعلى منتج مبيعات</strong><div class="meta">${bestSales.product}</div></div><div class="metric-badge">${money(bestSales.sales)}</div></div>`);
+    if(bestProfit)lines.push(`<div class="insight-row"><div><strong>أعلى منتج ربح</strong><div class="meta">${bestProfit.product}</div></div><div class="metric-badge">${money(bestProfit.profit)}</div></div>`);
+    if(lowMargin)lines.push(`<div class="insight-row"><div><strong>أقل هامش ربح</strong><div class="meta">${lowMargin.product} | راجع السعر أو التكلفة</div></div><div class="metric-badge">${fmt(lowMargin.margin)}%</div></div>`);
+    notes.innerHTML=lines.length?'<div class="insight-list">'+lines.join('')+'</div>':'<div class="empty">لا توجد ملاحظات</div>';
+  }
+}
+
+function renderCharts(arr){let byDate=groupSum(arr,'date'),dates=Object.keys(byDate).sort(),prod=topEntries(groupSum(arr,'product'),8);if(salesChart)salesChart.destroy();if(productsChart)productsChart.destroy();salesChart=new Chart(document.getElementById('salesChart'),{type:'line',data:{labels:dates,datasets:[{label:'المبيعات',data:dates.map(d=>byDate[d]),tension:.35,fill:true}]},options:{plugins:{legend:{display:false}},scales:{y:{beginAtZero:true}}}});productsChart=new Chart(document.getElementById('productsChart'),{type:'bar',data:{labels:prod.map(x=>x[0]),datasets:[{label:'المبيعات',data:prod.map(x=>x[1])}]},options:{indexAxis:'y',plugins:{legend:{display:false}},scales:{x:{beginAtZero:true}}}})}
+function yearlyStats(){let out={};sales.forEach(x=>{let y=saleYear(x)||'غير محدد';if(!out[y])out[y]={sales:0,profit:0,delivery:0,orders:0};out[y].sales+=n(x.total);out[y].profit+=n(x.profit);out[y].delivery+=n(x.delivery);out[y].orders++});return Object.entries(out).filter(([y])=>y!=='غير محدد').sort((a,b)=>b[0].localeCompare(a[0]))}
+function renderYearSummary(){let el=document.getElementById('yearSummary'),canvas=document.getElementById('yearlyChart');if(!el||!canvas)return;let rows=yearlyStats();if(!rows.length){el.innerHTML='<div class="empty">لا توجد بيانات سنوات</div>';if(yearlyChart)yearlyChart.destroy();return}let asc=rows.slice().sort((a,b)=>a[0].localeCompare(b[0]));el.innerHTML='<div class="year-cards">'+rows.map(([y,v],i)=>{let prev=rows[i+1]?.[1]?.sales||0;let growth=prev?((v.sales-prev)/prev*100):null;let g=growth===null?'':`<div class="${growth>=0?'growth-up':'growth-down'}">${growth>=0?'+':''}${growth.toLocaleString('en-US',{maximumFractionDigits:1})}% عن السنة السابقة</div>`;return `<div class="year-card"><b>${y}</b><div class="hint">${v.orders} طلب</div><div>المبيعات: <b>${money(v.sales)}</b></div><div>الأرباح: ${money(v.profit)}</div><div>التوصيل: ${money(v.delivery)}</div>${g}</div>`}).join('')+'</div>';if(yearlyChart)yearlyChart.destroy();yearlyChart=new Chart(canvas,{type:'bar',data:{labels:asc.map(x=>x[0]),datasets:[{label:'المبيعات',data:asc.map(x=>x[1].sales)},{label:'الأرباح',data:asc.map(x=>x[1].profit)}]},options:{plugins:{legend:{display:true}},scales:{y:{beginAtZero:true}}}})}
+function renderCustomers(arr=filtered()){let g={};arr.forEach(x=>{let c=x.customer||'غير محدد';if(!g[c])g[c]={sales:0,profit:0,orderIds:new Set(),delivery:0};g[c].sales+=n(x.total);g[c].profit+=n(x.profit);g[c].delivery+=n(x.delivery);g[c].orderIds.add(x.orderId||x.id)});let rows=Object.entries(g).sort((a,b)=>b[1].sales-a[1].sales);customersList.innerHTML=rows.length?'<div class="customer-list">'+rows.map(([name,v])=>`<div class="customer-item"><div><b>${name}</b><div class="hint">${v.orderIds.size} طلب | مبيعات ${money(v.sales)} | أرباح ${money(v.profit)}</div></div><button class="ghost" onclick="openCustomer('${name.replace(/'/g,"&#39;")}')">عرض</button></div>`).join('')+'</div>':'<div class="empty">لا يوجد عملاء</div>'}
+function openCustomer(name){let arr=sales.filter(x=>(x.customer||'غير محدد')===name),t=totals(arr);modalTitle.textContent='سجل العميل: '+name;modalBody.innerHTML='<div class="grid kpis" style="margin-bottom:12px"><div class="card kpi"><span>المبيعات</span><strong>'+money(t.sales)+'</strong></div><div class="card kpi"><span>الأرباح</span><strong>'+money(t.profit)+'</strong></div><div class="card kpi"><span>الطلبات</span><strong>'+t.orders+'</strong></div><div class="card kpi"><span>التوصيل</span><strong>'+money(t.delivery)+'</strong></div></div><div id="customerDetail"></div>';modal.style.display='grid';renderTable('customerDetail',arr,false)}
+function closeModal(){modal.style.display='none'}
+function mapRow(r){let date=dateISO(r['التاريخ']??r['Date']??r['date']);let qty=n(r['الكمية']??r['Quantity']);let price=n(r['السعر (للواحد)']??r['السعر للحبة']??r['Price']);let cost=n(r['التكلفة (للواحد)']??r['Cost']);let total=n(r['المجموع']??r['Total'])||qty*price;let profit=n(r['الأرباح']??r['الارباح']??r['Profit']);if(!profit&&cost)profit=total-(cost*qty);return{id:uid(),orderId:uid(),itemIndex:1,day:r['اليوم']||dayName(date),date,customer:String(r['الاسم']??r['العميل']??r['Customer']??'').trim(),product:String(r['اسم المنتج']??r['Product']??'').trim(),price,cost,qty,total,profit,delivery:n(r['توصيل']??r['التوصيل']??r['Delivery']),notes:String(r['ملاحظات']??r['Notes']??'').trim(),source:'Excel'}}
+function importExcel(e){let file=e.target.files[0];if(!file)return;let reader=new FileReader();reader.onload=function(ev){let wb=XLSX.read(ev.target.result,{type:'array',cellDates:true});let imported=[];wb.SheetNames.forEach(name=>{if(['المنتجات','الملخص','summary','products'].includes(String(name).toLowerCase()))return;let rows=XLSX.utils.sheet_to_json(wb.Sheets[name],{defval:'',raw:false});rows.forEach(r=>{let item=mapRow(r);if(item.date&&item.customer&&item.product&&item.qty)imported.push(item)})});sales=sales.concat(imported);save();bulkUpsertCloud(imported);let added=mergeProductsFromSales(imported,true);uploadMsg.textContent=`تم استيراد ${imported.length} عملية من الملف، وتم تحديث ${added} منتج في القائمة`;renderAll()};reader.readAsArrayBuffer(file)}
+function pdfFiltered(){let from=pdfFrom.value,to=pdfTo.value,c=pdfCustomer.value.trim(),y=pdfYear?.value||'all';return sales.filter(x=>(y==='all'||saleYear(x)===y)&&(!from||x.date>=from)&&(!to||x.date<=to)&&(!c||(x.customer||'').includes(c))).sort((a,b)=>(a.date||'').localeCompare(b.date||''))}
+function fmt(v){return n(v).toLocaleString('en-US',{maximumFractionDigits:2})}
+function exportPDF(){let arr=pdfFiltered();if(!arr.length){alert('لا توجد بيانات للتقرير');return}let {jsPDF}=window.jspdf,doc=new jsPDF({orientation:'landscape'}),t=totals(arr);doc.setFontSize(18);doc.text('Craving Sweet - Sales Report',14,14);doc.setFontSize(11);let reportYear=(pdfYear?.value&&pdfYear.value!=='all')?`   Year: ${pdfYear.value}`:'';doc.text(`Total Sales: ${fmt(t.sales)} SAR   Profit: ${fmt(t.profit)} SAR   Delivery: ${fmt(t.delivery)} SAR   Orders: ${t.orders}${reportYear}`,14,24);doc.autoTable({startY:32,styles:{fontSize:8,halign:'right'},head:[['Day','Date','Customer','Product','Price','Cost','Qty','Total','Profit','Delivery','Notes']],body:arr.map(x=>[x.day,x.date,x.customer,x.product,fmt(x.price),fmt(x.cost),x.qty,fmt(x.total),fmt(x.profit),fmt(x.delivery),x.notes||''])});doc.save('craving-sweet-sales-report.pdf')}
+function exportExcel(){let arr=pdfFiltered();if(!arr.length){alert('لا توجد بيانات');return}let ws=XLSX.utils.json_to_sheet(arr.map(x=>({'رقم الطلب':x.orderId||x.id,'اليوم':x.day,'التاريخ':x.date,'الاسم':x.customer,'اسم المنتج':x.product,'السعر (للواحد)':x.price,'التكلفة (للواحد)':x.cost,'الكمية':x.qty,'المجموع':x.total,'الأرباح':x.profit,'توصيل':x.delivery,'ملاحظات':x.notes||''})));let wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,'Sales');XLSX.writeFile(wb,'craving-sweet-sales.xlsx')}
+boot();
+</script>
+</body>
+</html>
